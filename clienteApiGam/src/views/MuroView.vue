@@ -18,7 +18,8 @@
       <input class="inputMuro" type="date" v-model="fecha" placeholder="Fecha">
       <button class="ir" @click="filtrarExperiencias">BUSCAR</button>
       <button class="publicar" @click="publicarExperiencia">PUBLICAR EXPERIENCIA</button>
-      <button class="cerrar" @click="cerrarSesion">CERRAR SESION</button>
+      <button class="cerrar" @click="cerrarSesion">CERRAR SESION <span><img src="../../public/cerrar.jpeg" alt="logo de cerrar"></span>
+      </button>
     </header>
     <section class="cuerpo">
       <TarjetaExperiencia :experiencia="experiencia" v-for="experiencia in experienciasFiltradas" :key="experiencia.id_experiencia" @click="experienciaDetallada(experiencia.id_experiencia)"/>
@@ -146,7 +147,6 @@ onMounted(() => {
 </script>
 
 <style>
-
   .headerMuro{
     width: 100%;
     background-color: #ffde59;
@@ -154,26 +154,23 @@ onMounted(() => {
   }
   #tipoExperiencia{
     margin: 1%;
-    width: 60%;
     padding: 1%;
     border-radius: 25px;
     border: solid 5px black;
-    width: 20%;
+    width: 13%;
   }
   #codigoPostal{
     margin: 1%;
-    width: 60%;
     padding: 1%;
     border-radius: 25px;
     border: solid 5px black;
-    width: 20%;
+    width: 13%;
   }
   .inputMuro{
     width: 10%;
   }
   .ir{
     margin: 1%;
-    width: 20%;
     border-radius: 25px;
     padding: 1%;
     border: solid 5px black;
@@ -183,11 +180,10 @@ onMounted(() => {
   }
   .publicar{
     margin: 1%;
-    width: 60%;
     padding: 1%;
     border-radius: 25px;
     border: solid 5px black;
-    width: 10%;
+    width: 15%;
     font-weight: bold;
     background-color: white;
   }
@@ -197,17 +193,19 @@ onMounted(() => {
   }
   .cerrar{
     margin: 1%;
-    width: 60%;
     padding: 1%;
     border-radius: 25px;
     border: solid 5px black;
-    width: 10%;
+    width: 11%;
     font-weight: bold;
-    background-color: white;
+    background-color: white;  
+  }
+  .cerrar img{
+    width: 20%;
   }
   ::placeholder{
   font-family: "Nerko One", cursive;
-  font-size: 1.3em;
+  font-size: 1em;
   color: black;
 }
   @media (max-width: 768px) {
