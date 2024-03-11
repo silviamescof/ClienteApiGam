@@ -19,13 +19,13 @@ const router = createRouter({
       path: '/registro-usuario',
       name: 'registro-usuario',
       component: RegistroUsuarioView,
-      props : true
+      props: true,
     },
     {
       path: '/muro',
       name: 'muro',
       component: MuroView,
-      props : true
+      props: true,
     },
     {
       path: '/publicar-experiencia',
