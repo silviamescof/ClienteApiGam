@@ -65,9 +65,13 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import * as urlService from '.././services/urlService';
 
 
 const router = useRouter();
+
 
 const dni = ref('');
 const nombreUsuario = ref('');
@@ -89,7 +93,7 @@ const paisLocalidad = ref('');
   }
   const registroUsuario = async () => {
     try {
-    const localidadResponse = await axios.post('http://127.0.0.1:8000/insertar-localidad', {
+    const localidadResponse = await axios.post(`${urlService.getUrl()}/insertar-localidad`, {
       codigo_postal: codigoPostalUsuario.value,
       nombre_localidad: nombreLocalidad.value,
       provincia_localidad: provinciaLocalidad.value,
@@ -102,7 +106,7 @@ const paisLocalidad = ref('');
     // Realizar la petición para registrar al usuario
         const fechaFormateada = new Date(fechaNacimiento.value).toISOString().split('T')[0];
         console.log(fechaFormateada);
-        const usuarioResponse = await axios.post('http://127.0.0.1:8000/crear-usuario', {
+        const usuarioResponse = await axios.post(`${urlService.getUrl()}/crear-usuario`, {
           dni: dni.value,
           nombre_usuario: nombreUsuario.value,
           password: password.value,
@@ -116,17 +120,27 @@ const paisLocalidad = ref('');
         });
 
         if (usuarioResponse.status === 201) {
+          toast.success("El usuario ha sido registrado con éxito", {
+        autoClose: 3000,
+      });
           // El usuario se registró correctamente, redirigir a la página de inicio de sesión
-          router.push('/');
+          router.push({name: 'login', query: { registrado: true }});
         } else {
           console.error('Error al registrar el usuario');
+          toast.error("El usuario ya está registrado, solo inicia sesion", {
+        autoClose: 3000,
+      });
         }
       } catch (error) {
         console.error('Error en la petición:', error);
       }
       console.log("localidad bien, error en usuario");
+      toast.error("El usuario ya está registrado, solo inicia sesion", {
+        autoClose: 3000,
+      });
     } else {
       console.error('Error al registrar la localidad');
+
     }
   } catch (error) {
     console.error('Error en la petición:', error);

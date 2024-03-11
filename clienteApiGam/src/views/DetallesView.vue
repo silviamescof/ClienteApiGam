@@ -8,6 +8,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import TarjetaExperienciaDetallada from '@/components/TarjetaExperienciaDetallada.vue';
 import * as dniService from '@/services/dniService';
+import * as urlService from '.././services/urlService';
 
 
 
@@ -21,7 +22,7 @@ const usuario = ref({});
 const obtenerUsuario = async () => {
   
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/consultar-usuario?dni=${dniProveedor.value}`);
+    const response = await axios.get(`${urlService.getUrl()}/consultar-usuario?dni=${dniProveedor.value}`);
     if (response.status === 200) {
       usuario.value = response.data.usuario;
       console.log(usuario.value);
@@ -36,7 +37,7 @@ const obtenerUsuario = async () => {
 };
 const obtenerExperiencia = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/consultar-experiencia?id_experiencia=${id.value}`);
+    const response = await axios.get(`${urlService.getUrl()}/consultar-experiencia?id_experiencia=${id.value}`);
     if (response.status === 200) {
       experiencia.value = response.data.experiencia;
       console.log(experiencia.value);

@@ -1,32 +1,52 @@
 <script setup>
 import InformacionBienvenida from '@/components/InformacionBienvenida.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import * as dniService from '@/services/dniService';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import * as urlService from '.././services/urlService';
+
 
 
 // Resto de variables y funciones
 const dni = ref('');
 const password = ref('');
 const router = useRouter();
+const url= urlService.getUrl();
+
+
 
 const redirectToRegistro = () => {
   router.push('/registro-usuario'); 
 }
 const login = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/consultar-credenciales-usuario?dni=${dni.value}&password=${password.value}`);
+    const response = await axios.get(`${url}/consultar-credenciales-usuario?dni=${dni.value}&password=${password.value}`);
     if (response.status === 200) {
         dniService.setDni(dni.value);
         router.push({ name: 'muro'});
     } else {
+        toast.error("Error en el login", {
+        autoClose: 3000,
+      }); 
       console.error('Error en el login');
     }
   } catch (error) {
     console.error('Error en la petición:', error);
+    toast.error("El usuario o la contraseña no figura en la base de datos", {
+        autoClose: 3000,
+      }); 
   }
 }
+onMounted(() => {
+    if(router.currentRoute.value.query.registrado == true){
+        toast.success("El usuario se ha registrado con éxito", {
+        autoClose: 9000,
+      });
+    }
+});
 
 </script>
 

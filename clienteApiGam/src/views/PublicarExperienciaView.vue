@@ -18,7 +18,7 @@
       </div>
 
       <div class="form-group">
-        <input class="input" type="date" id="fecha_experiencia" v-model="fecha" required placeholder="Fecha de la experiencia"/>
+        <input class="input" type="date" id="fecha_experiencia" v-model="fecha" required placeholder="Fecha de la experiencia" :min="getFormattedDateToday()" />
       </div>
 
       <select v-model="tipoExperiencia" name="tipoExperiencia" id="tipoExperiencia2" class="selectTipoExperiencia">
@@ -58,6 +58,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import * as dniService from '@/services/dniService';
+import * as urlService from '.././services/urlService';
 
 const router = useRouter();
 const tiposDeExperiencia = ref([]); 
@@ -74,12 +75,25 @@ const provinciaLocalidad = ref('');
 const paisLocalidad = ref('');
 const dniProveedor = ref('');
 
+const getFormattedDateToday = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  let day = today.getDate();
+
+  // Ajusta el formato a 'YYYY-MM-DD'
+  month = month < 10 ? '0' + month : month;
+  day = day < 10 ? '0' + day : day;
+
+  return `${year}-${month}-${day}`;
+};
+
 const volver = ()=>{
   router.push('/muro');
 };
 const obtenerTiposExperiencia = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/consultar-tipos-experiencias`);
+    const response = await axios.get(`${urlService.getUrl()}/consultar-tipos-experiencias`);
     if (response.status === 200) {
       console.log(response.data.tipos_experiencias);
       tiposDeExperiencia.value = response.data.tipos_experiencias; 
@@ -94,7 +108,7 @@ const obtenerTiposExperiencia = async () => {
 const registrarExperiencia = async () => {
   try {
     // 1. Registrar la localidad
-    const localidadResponse = await axios.post('http://127.0.0.1:8000/insertar-localidad', {
+    const localidadResponse = await axios.post(`${urlService.getUrl()}/insertar-localidad`, {
       codigo_postal: codigoPostalExperiencia.value,
       nombre_localidad: nombreLocalidad.value,
       provincia_localidad: provinciaLocalidad.value,
@@ -107,7 +121,7 @@ const registrarExperiencia = async () => {
         const fechaFormateada = new Date(fecha.value).toISOString().split('T')[0];
         
 
-        const experienciaResponse = await axios.post('http://127.0.0.1:8000/insertar-experiencia', {
+        const experienciaResponse = await axios.post(`${urlService.getUrl()}/insertar-experiencia`, {
           titulo_experiencia: titulo.value,
           descripcion_experiencia: descripcion.value,
           lugar_partida: lugar.value,

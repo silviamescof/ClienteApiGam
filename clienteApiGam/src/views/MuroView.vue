@@ -15,7 +15,7 @@
           {{ localidad.nombre_localidad}}
         </option>
       </select>
-      <input class="inputMuro" type="date" v-model="fecha" placeholder="Fecha">
+      <input class="inputMuro" type="date" v-model="fecha" placeholder="Fecha" :min="getFormattedDateToday()">
       <button class="ir" @click="filtrarExperiencias">BUSCAR</button>
       <button class="publicar" @click="publicarExperiencia">PUBLICAR EXPERIENCIA</button>
       <button class="cerrar" @click="cerrarSesion">CERRAR SESION <span><img src="../../public/cerrar.jpeg" alt="logo de cerrar"></span>
@@ -32,6 +32,9 @@ import TarjetaExperiencia from '@/components/TarjetaExperiencia.vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import * as dniService from '@/services/dniService';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import * as urlService from '.././services/urlService';
 
 
 const router = useRouter();
@@ -44,9 +47,21 @@ let experienciasFiltradas = ref([]);
 
 
 ///////////////////////////////////////////////////////////////////////////
+const getFormattedDateToday = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  let day = today.getDate();
+
+  // Ajusta el formato a 'YYYY-MM-DD'
+  month = month < 10 ? '0' + month : month;
+  day = day < 10 ? '0' + day : day;
+
+  return `${year}-${month}-${day}`;
+};
 const obtenerCodigosPostales = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/consultar-localidades`);
+    const response = await axios.get(`${urlService.getUrl()}/consultar-localidades`);
     if (response.status === 200) {
       
       const localidades = response.data.localidades;
@@ -71,36 +86,54 @@ const obtenerCodigosPostales = async () => {
       //console.log(codigosPostales);
     } else {
       console.error('Error en la peticion de codigos postales');
+      toast.error("Error al proporcionar la informacion basica de la pagina, recarga de nuevo", {
+        autoClose: 3000,
+      }); 
     }
   } catch (error) {
     console.error('Error en la petición:', error);
+    toast.error("Error al proporcionar la informacion basica de la pagina, recarga de nuevo", {
+        autoClose: 3000,
+      });
   }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const obtenerTiposExperiencia = async () => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/consultar-tipos-experiencias`);
+    const response = await axios.get(`${urlService.getUrl()}/consultar-tipos-experiencias`);
     if (response.status === 200) {
       console.log(response.data.tipos_experiencias);
       tiposDeExperiencia = response.data.tipos_experiencias;
       
     } else {
       console.error('Error en la peticion de experiencias');
+      toast.error("Error al proporcionar la informacion basica de la pagina, recarga de nuevo", {
+        autoClose: 3000,
+      });
     }
   } catch (error) {
     console.error('Error en la petición:', error);
+    toast.error("Error al proporcionar la informacion basica de la pagina, recarga de nuevo", {
+        autoClose: 3000,
+      });
   }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////
 const filtrarExperiencias = async () => {
   try {
     let fechaFormateada = '';
+    
     if (fecha.value) {
-      fechaFormateada = new Date(fecha.value); 
-      console.log(fechaFormateada);
+      const fechaBusqueda = new Date(fecha.value);
+
+      // Si la fecha de búsqueda es mayor que hoy, úsala
+      fechaFormateada = fechaBusqueda >= new Date() ? fechaBusqueda : new Date();
+    } else {
+      // Si no hay fecha de búsqueda, usa la fecha actual
+      fechaFormateada = new Date();
     }
 
-    const response = await axios.get('http://127.0.0.1:8000/todas-las-experiencias-filtro', {
+    const response = await axios.get(`${urlService.getUrl()}/todas-las-experiencias-filtro`, {
       params: {
         tipo_experiencia: tipoExperiencia.value,
         codigo_postal: codigoPostal.value,
@@ -109,14 +142,25 @@ const filtrarExperiencias = async () => {
     });
 
     if (response.status === 200) {
+      //reemplaza los elementos que tenia el array por el nuevo resultado para ayudar a Vue a reconocer los cambios
       experienciasFiltradas.value.splice(0, experienciasFiltradas.value.length, ...response.data);
+
+      // Ordenar las experiencias por fecha de la más reciente a la más antigua
+      experienciasFiltradas.value.sort((a, b) => new Date(a.fecha_experiencia) - new Date(b.fecha_experiencia));
+
       console.log('Experiencias filtradas:', experienciasFiltradas.value);
       await nextTick();
     } else {
       console.error('Error al consultar experiencias');
+      toast.error("No existe ninguna experiencia que cumpla con el criterio de busqueda.", {
+        autoClose: 3000,
+      });
     }
   } catch (error) {
     console.error('Error en la petición:', error);
+    toast.error("No existe ninguna experiencia que cumpla con el criterio de busqueda", {
+        autoClose: 3000,
+      });
   }
 };
 
@@ -140,8 +184,7 @@ onMounted(() => {
   filtrarExperiencias();
     if(dniService.getDni()==""){
       router.push('/');
-    }
-    
+    }    
 });
 
 </script>

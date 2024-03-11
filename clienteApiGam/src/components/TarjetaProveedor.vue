@@ -35,6 +35,8 @@
   }
   
   const props = defineProps(['proveedor']);
+
+  
   </script>
   
   <style scoped>
