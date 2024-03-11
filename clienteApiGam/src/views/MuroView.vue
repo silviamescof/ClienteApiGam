@@ -25,8 +25,6 @@
     </section>
   </div>
 </template>
-
-
 <script setup>
 import { ref, onMounted , nextTick} from 'vue';
 import TarjetaExperiencia from '@/components/TarjetaExperiencia.vue';

@@ -52,7 +52,7 @@ const reservarExperiencia = async () =>{
       id_experiencia: props.experiencia.id_experiencia,
     });
     if (citaResponse.status === 201) {
-      router.push('/confirmacion-reserva'); 
+      router.push({ name: 'confirmacion-reserva', query: { idExp: props.experiencia.id_experiencia } }); 
     } else {
       console.error('Error al registrar la experiencia');
     }
