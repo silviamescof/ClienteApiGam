@@ -49,6 +49,9 @@ onMounted(async () => {
 
   await obtenerExperiencia();
   await obtenerUsuario();
+  if(dniService.getDni()==""){
+      router.push('/');
+    }
 });
 </script>
 

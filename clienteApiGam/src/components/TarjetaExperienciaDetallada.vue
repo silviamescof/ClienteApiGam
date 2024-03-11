@@ -83,11 +83,12 @@ const calcularEdad = (fechaNacimiento) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 5%;
+  padding-top: 2%;
   padding-bottom: 5%;
+  font-size: 1.7em;
 }
 .tarjetaExperienciaDetallada{
-  width: 80%;
+  width: 90%;
   background-color: white;
   border: solid black 20px;
   border-radius: 50px;
@@ -95,14 +96,22 @@ const calcularEdad = (fechaNacimiento) => {
   grid-template-columns: 50% 50%;
   padding: 0% 2% 2% 2%;
 }
+.datosExperiencia{
+  padding-right: 10%;
+}
 .datosExperiencia p{
   font-weight: bold;
+  margin: 1%;
 }
 .datosExperiencia p span{
   font-weight: 400;
 }
+.datosUsuario{
+  padding-right: 10%;
+}
 .datosUsuario p{
   font-weight: bold;
+  margin: 1%;
 }
 .datosUsuario p span{
   font-weight: 400;
@@ -148,6 +157,17 @@ const calcularEdad = (fechaNacimiento) => {
   border: black solid 10px;
   border-radius: 25px;
   width: 50%;
+  cursor: pointer;
+  animation: crecerEncoger 2s infinite alternate;
+}
+
+@keyframes crecerEncoger {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
 }
 @media (max-width: 768px) {
   .tarjetaExperienciaDetallada{

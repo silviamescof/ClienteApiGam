@@ -21,8 +21,8 @@
         <input class="input" type="date" id="fecha_experiencia" v-model="fecha" required placeholder="Fecha de la experiencia"/>
       </div>
 
-      <select v-model="tipoExperiencia" name="tipoExperiencia" id="tipoExperiencia">
-        <option value="" disabled selected>TIPO DE EXPERIENCIA</option>
+      <select v-model="tipoExperiencia" name="tipoExperiencia" id="tipoExperiencia2" class="selectTipoExperiencia">
+        <option value="" disabled selected>Tipo de experiencia</option>
         <option v-for="experiencia in tiposDeExperiencia" :key="experiencia.id_tipo_experiencia" :value="experiencia.id_tipo_experiencia">
           {{ experiencia.nombre_tipo }}
         </option>
@@ -137,6 +137,9 @@ const registrarExperiencia = async () => {
 
 
 onMounted(() => {
+  if(dniService.getDni()==""){
+      router.push('/');
+    }
   obtenerTiposExperiencia();
   dniProveedor.value = dniService.getDni();
   console.log(dniProveedor.value);
@@ -144,5 +147,27 @@ onMounted(() => {
 </script>
 
 <style>
+.registro-container{
+  font-size: 2em;
+  padding-bottom: 10%;
+}
+button{
+  font-family: "Nerko One", cursive;
+  font-size: 1.3em;
 
+}
+#tipoExperiencia2{
+  margin: 1%;
+  width: 68%;
+  padding: 1%;
+  border-radius: 25px;
+  border: solid 5px black;
+  margin-right: 13%;
+  
+}
+::placeholder{
+  font-family: "Nerko One", cursive;
+  font-size: 1.3em;
+  color: black;
+}
 </style>

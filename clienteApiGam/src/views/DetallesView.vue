@@ -7,6 +7,8 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import TarjetaExperienciaDetallada from '@/components/TarjetaExperienciaDetallada.vue';
+import * as dniService from '@/services/dniService';
+
 
 
 const router = useRouter();
@@ -48,6 +50,9 @@ const obtenerExperiencia = async () => {
 };
 
 onMounted(async () => {
+  if(dniService.getDni()==""){
+      router.push('/');
+    }
   id.value = router.currentRoute.value.query.idExp;
   console.log(id.value);
 

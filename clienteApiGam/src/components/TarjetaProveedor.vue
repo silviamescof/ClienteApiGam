@@ -26,8 +26,9 @@
   
   <script setup>
   import router from '@/router';
-import { defineProps } from 'vue';
-    import { useRouter } from 'vue-router';
+  import { defineProps } from 'vue';
+  import { useRouter } from 'vue-router';
+  
   useRouter();
   const volverAlMuro= () =>{
     router.push('muro');
@@ -38,6 +39,7 @@ import { defineProps } from 'vue';
   
   <style scoped>
     .tarjetaConfirmacion{
+      font-size: 2em;
         margin: 5%;
         border: black solid 20px;
         border-radius: 50px;

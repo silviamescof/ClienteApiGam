@@ -1,7 +1,7 @@
 <template>
   <div class="contenidoMuro">
     <header class="headerMuro">
-      <select v-model="tipoExperiencia" name="tipoExperiencia" id="tipoExperiencia">
+      <select v-model="tipoExperiencia" name="" id="tipoExperiencia">
         <option value="" disabled selected>TIPO DE EXPERIENCIA</option>
         <option value="">Ningun Filtro</option>
         <option v-for="experiencia in tiposDeExperiencia" :key="experiencia.id_tipo_experiencia" :value="experiencia.id_tipo_experiencia">
@@ -30,6 +30,7 @@ import { ref, onMounted , nextTick} from 'vue';
 import TarjetaExperiencia from '@/components/TarjetaExperiencia.vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import * as dniService from '@/services/dniService';
 
 
 const router = useRouter();
@@ -123,6 +124,7 @@ const publicarExperiencia = () => {
   router.push('/publicar-experiencia');
 };
 const cerrarSesion = ()=>{
+  dniService.setDni('');
   router.push('/');
 }
 const experienciaDetallada = (idExperiencia) => {
@@ -135,7 +137,9 @@ onMounted(() => {
   obtenerCodigosPostales();
   obtenerTiposExperiencia();
   filtrarExperiencias();
-    // Accede al valor de dniUsuario a través de router.query
+    if(dniService.getDni()==""){
+      router.push('/');
+    }
     
 });
 
@@ -201,6 +205,11 @@ onMounted(() => {
     font-weight: bold;
     background-color: white;
   }
+  ::placeholder{
+  font-family: "Nerko One", cursive;
+  font-size: 1.3em;
+  color: black;
+}
   @media (max-width: 768px) {
     .headerMuro {
       display: flex;
