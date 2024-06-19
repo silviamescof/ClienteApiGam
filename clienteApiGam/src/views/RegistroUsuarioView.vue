@@ -1,10 +1,10 @@
 <template>
   <div class="registro-container">
-    <form @submit.prevent="registrarUsuario">
+    <form @submit.prevent="registroUsuario">
       <fieldset>
         <legend class="legendRegistro">Registro de usuario</legend>
         <div class="form-group">
-        <input class="input" type="text" id="dni" v-model="dni" required placeholder="DNI"/>
+        <input class="input" type="text" id="dni" v-model="dni" required placeholder="DNI" pattern="^\d{8}[A-Z]$"/>
       </div>
 
       <div class="form-group">
@@ -29,7 +29,7 @@
         <input class="input" type="text" id="direccion" v-model="direccion" required placeholder="Dirección Completa"/>
       </div>
       <div class="form-group">
-        <input class="input" type="text" id="telefono" v-model="telefono" required placeholder="Teléfono de contacto"/>
+        <input class="input" type="text" id="telefono" v-model="telefono" pattern="^[679]\d{8}$" placeholder="Teléfono de contacto"/>
       </div>
 
       <div class="form-group">
@@ -54,7 +54,7 @@
           <input class="input" type="text" id="pais_localidad" v-model="paisLocalidad" required placeholder="País"/>
         </div>
       </fieldset>
-      <button class="inputSubmit" type="submit" @click="registroUsuario">Registrarse</button>
+      <button class="inputSubmit" type="submit">Registrarse</button>
       <button class="volver" @click="volver">Volver</button>
     </form>
   </div>

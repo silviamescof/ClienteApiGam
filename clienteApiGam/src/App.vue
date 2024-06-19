@@ -4,8 +4,7 @@
 
 <template>
   <div class="pagina">
-    <!-- Contenido de tu componente Vue.js -->
-    <RouterView />
+    <RouterView  />
   </div>
 </template>
 
@@ -16,4 +15,5 @@
   font-weight: 400;
   font-style: normal;
 }
+
 </style>

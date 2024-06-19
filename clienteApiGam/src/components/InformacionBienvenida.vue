@@ -119,10 +119,12 @@ const closeModalRgpd = () => {
   z-index: 1000;
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
+  margin-top: 10%;
+  margin-left: 10%;
+  width: 80%;
+  height: 60%;
   background-color: rgba(0, 0, 0, 0.5);
-  overflow-y: auto; /* Agrega scroll si el contenido es demasiado largo */
+  overflow-y: hidden; /* Agrega scroll si el contenido es demasiado largo */
 }
 
 .modal-content {

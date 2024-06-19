@@ -6,7 +6,8 @@
         <div class="capa">
             <div class="notaUsuario">
         <p>
-          ¡IMPORTANTE! Asegúrate de anotar correctamente los datos del organizador antes de cerrar esta ventana.
+          Le informamos que se ha efectuado correctamente la reserva de la experiencia de <span>{{ props.proveedor.nombre_usuario }}</span>. Le enviaremos un
+          correo electrónico, tanto a usted como a <span>{{ props.proveedor.nombre_usuario }}</span>, donde figurarán los datos personales para que puedan ponerse en contacto. 
           <br />
           ¡IMPORTANTE! Si por algún motivo se tuviese que cancelar la cita, debes avisar al organizador para que pueda volver a publicar su anuncio.
           <br />
@@ -14,6 +15,7 @@
         </p>
       </div>
       <div class="datosDeContacto">
+        <p>DATOS DE CONTACTO DEL PROVEEDOR DE LA EXPERIENCIA</p>
         <p>NOMBRE: <span>{{ props.proveedor.nombre_usuario }}</span></p>
         <p>APELLIDO: <span> {{ props.proveedor.apellidos}}</span></p>
         <p>TELEFONO: <span>{{ props.proveedor.telefono }}</span></p>
@@ -42,7 +44,7 @@
   <style scoped>
     .tarjetaConfirmacion{
       font-size: 2em;
-        margin: 5%;
+        margin: 0% 5% 5% 5%;
         border: black solid 20px;
         border-radius: 50px;
         padding: 3%;
@@ -51,7 +53,7 @@
     .capa{
         background-color: white;
         border-radius: 50px;
-        padding: 2%;
+        padding: 1%;
     }
     .contenedorCerrar {
   width: 10%; 

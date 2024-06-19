@@ -14,7 +14,7 @@
         <input class="input" type="text" id="lugar_partida" v-model="lugar" required placeholder="Lugar de partida"/>
       </div>
       <div class="form-group">
-        <input class="input" type="number" id="coste_estimado" v-model="coste" required placeholder="Coste estimado"/>
+        <input class="input" type="number" id="coste_estimado" v-model="coste" required placeholder="Coste estimado" min="0"/>
       </div>
 
       <div class="form-group">

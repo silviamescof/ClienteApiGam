@@ -32,6 +32,8 @@ import { defineProps, computed } from 'vue';
 import axios from 'axios';
 import * as dniService from '@/services/dniService';
 import router from '@/router';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const props = defineProps(['experiencia', 'usuario']);
 const fechaFormateada = computed(() => {
@@ -45,20 +47,29 @@ const volver = () =>{
   router.push('/muro');
 }
 const reservarExperiencia = async () =>{
-  try {
-    const citaResponse = await axios.post('http://127.0.0.1:8000/crear-cita', {
-      dni_consumidor: dniService.getDni(),
-      dni_proveedor: props.experiencia.dni_proveedor,
-      id_experiencia: props.experiencia.id_experiencia,
-    });
-    if (citaResponse.status === 201) {
-      router.push({ name: 'confirmacion-reserva', query: { idExp: props.experiencia.id_experiencia } }); 
-    } else {
-      console.error('Error al registrar la experiencia');
-    }
+  if(dniService.getDni()!=props.experiencia.dni_proveedor){
+    try {
+      const citaResponse = await axios.post('http://127.0.0.1:8000/crear-cita', {
+        dni_consumidor: dniService.getDni(),
+        dni_proveedor: props.experiencia.dni_proveedor,
+        id_experiencia: props.experiencia.id_experiencia,
+      });
+      if (citaResponse.status === 201) {
+        router.push({ name: 'confirmacion-reserva', query: { idExp: props.experiencia.id_experiencia } }); 
+      } else {
+        console.error('Error al registrar la experiencia');
+        toast.error("Error al reservar la experiencia", {
+        autoClose: 3000,
+      }); 
+      }
 
-  } catch (error) {
-    console.error('Error en la petición de localidad:', error);
+    } catch (error) {
+      console.error('Error en la petición de localidad:', error);
+    }
+  }else{
+    toast.error("No puedes reservar tu propia experiencia,si ya no puedes ofrecerla, eliminala en el menú administrador", {
+        autoClose: 3000,
+      }); 
   }
 }
 const calcularEdad = (fechaNacimiento) => {
@@ -84,7 +95,7 @@ const calcularEdad = (fechaNacimiento) => {
   align-items: center;
   justify-content: center;
   padding-top: 2%;
-  padding-bottom: 5%;
+  padding-bottom: 2%;
   font-size: 1.7em;
 }
 .tarjetaExperienciaDetallada{
@@ -116,7 +127,7 @@ const calcularEdad = (fechaNacimiento) => {
 .datosUsuario p span{
   font-weight: 400;
 }
-.mayuscula{
+.mayuscula::first-letter{
   text-transform: capitalize;
 }
 .avatar{

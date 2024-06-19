@@ -82,8 +82,8 @@ const obtenerCodigosPostales = async () => {
         
       });
       
-      codigosPostales = localidades;
-      //console.log(codigosPostales);
+      codigosPostales.value = localidades;
+      console.log(codigosPostales.value);
     } else {
       console.error('Error en la peticion de codigos postales');
       toast.error("Error al proporcionar la informacion basica de la pagina, recarga de nuevo", {
@@ -103,7 +103,8 @@ const obtenerTiposExperiencia = async () => {
     const response = await axios.get(`${urlService.getUrl()}/consultar-tipos-experiencias`);
     if (response.status === 200) {
       console.log(response.data.tipos_experiencias);
-      tiposDeExperiencia = response.data.tipos_experiencias;
+      tiposDeExperiencia.value = response.data.tipos_experiencias;
+      console.log(tipoExperiencia);
       
     } else {
       console.error('Error en la peticion de experiencias');
@@ -119,40 +120,60 @@ const obtenerTiposExperiencia = async () => {
   }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////
-const filtrarExperiencias = async () => {
-  try {
-    let fechaFormateada = '';
-    
-    if (fecha.value) {
-      const fechaBusqueda = new Date(fecha.value);
+const obtenerFechaFormateada = (date) => {
+  const year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
 
-      // Si la fecha de búsqueda es mayor que hoy, úsala
-      fechaFormateada = fechaBusqueda >= new Date() ? fechaBusqueda : new Date();
+  // Asegúrate de que month y day tengan dos dígitos
+  month = month < 10 ? '0' + month : month;
+  day = day < 10 ? '0' + day : day;
+
+  return `${year}-${month}-${day}`;
+};
+const filtrarExperiencias = async () => {
+  console.log("se llama a la funcion");
+  try {
+    // Construir el objeto params con los parámetros de la solicitud
+    let params = {
+      tipo_experiencia: tipoExperiencia.value,
+      codigo_postal: codigoPostal.value
+    };
+
+    // Verificar si hay una fecha proporcionada, de lo contrario establecer la fecha por defecto como la fecha de hoy
+    if (fecha.value) {
+      const fechaFormateada = obtenerFechaFormateada(new Date(fecha.value));
+      console.log("paso fecha: ", fechaFormateada);
+      params.fecha = fechaFormateada;
     } else {
-      // Si no hay fecha de búsqueda, usa la fecha actual
-      fechaFormateada = new Date();
+      // Si no hay una fecha proporcionada, establecer el parámetro de fecha como una cadena vacía
+      params.fecha = "";
     }
 
-    const response = await axios.get(`${urlService.getUrl()}/todas-las-experiencias-filtro`, {
-      params: {
-        tipo_experiencia: tipoExperiencia.value,
-        codigo_postal: codigoPostal.value,
-        fecha: fechaFormateada,
-      },
+    // Realizar la solicitud HTTP con los parámetros configurados
+    const response = await axios.get(`http://127.0.0.1:8000/todas-las-experiencias-filtro`, {
+      params: params
     });
-
+    console.log("response se obtiene ",response);
     if (response.status === 200) {
+      const experienciasFuturas = response.data.filter(experiencia => {
+        const fechaExperiencia = new Date(experiencia.fecha_experiencia);
+        const fechaActual = new Date();
+        return fechaExperiencia >= fechaActual;
+      });
       //reemplaza los elementos que tenia el array por el nuevo resultado para ayudar a Vue a reconocer los cambios
-      experienciasFiltradas.value.splice(0, experienciasFiltradas.value.length, ...response.data);
+       // Reemplazar los elementos que tenía el array por el nuevo resultado filtrado
+       experienciasFiltradas.value.splice(0, experienciasFiltradas.value.length, ...experienciasFuturas);
 
       // Ordenar las experiencias por fecha de la más reciente a la más antigua
       experienciasFiltradas.value.sort((a, b) => new Date(a.fecha_experiencia) - new Date(b.fecha_experiencia));
+
 
       console.log('Experiencias filtradas:', experienciasFiltradas.value);
       await nextTick();
     } else {
       console.error('Error al consultar experiencias');
-      toast.error("No existe ninguna experiencia que cumpla con el criterio de busqueda.", {
+      toast.error("No existe ninguna experiencia que cumpla con el criterio de busqueda, bloue if.", {
         autoClose: 3000,
       });
     }
@@ -163,7 +184,6 @@ const filtrarExperiencias = async () => {
       });
   }
 };
-
 //////////////////////////////////////////////////////////////////////////////////////////////
 const publicarExperiencia = () => {
   router.push('/publicar-experiencia');
@@ -179,9 +199,9 @@ const experienciaDetallada = (idExperiencia) => {
 };
 //////////////////////////////////////////////////////////////////////////////////////////////
 onMounted(() => {
-  obtenerCodigosPostales();
-  obtenerTiposExperiencia();
-  filtrarExperiencias();
+   obtenerCodigosPostales();
+   obtenerTiposExperiencia();
+   filtrarExperiencias();
     if(dniService.getDni()==""){
       router.push('/');
     }    
